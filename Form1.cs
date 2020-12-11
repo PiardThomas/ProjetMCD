@@ -19,6 +19,7 @@ namespace MCD
 
         Entite entiteCurrent;
         Association associationCurrent;
+        Lien lienCurrent;
 
         string mode = "Selection";
         string PhaseCourante = "null";
@@ -215,6 +216,13 @@ namespace MCD
                     mcd.reloadPage();
                     associationCurrent.drawAssociation(associationCurrent);
                 }
+                else if (lienCurrent != null)
+                {
+                    lienCurrent.x = x - dX;
+                    lienCurrent.y = y - dY;
+                    mcd.reloadPage();
+                    lienCurrent.drawLien(lienCurrent);
+                }
             }
         }
 
@@ -247,7 +255,11 @@ namespace MCD
 
         private void ItererPhase_Lien_Nouvelle()
         {
-
+            if (mcd.checkObjet(x, y))
+            {
+                mcd.newLien(x, y, x, y, ("L" + x + "_" + y), ("L" + x + "_" + y));
+                mcd.drawCurrentLien(x, y);
+            }
         }
 
         private void PasserEnPhase_Lien_Position()
@@ -257,7 +269,14 @@ namespace MCD
 
         private void ItererPhase_Lien_Position()
         {
-
+            if (mouse == "Down")
+            {
+                if (lienCurrent != null)
+                {
+                    mcd.reloadPage();
+                    mcd.drawCurrentLien(x, y);
+                }
+            }
         }
 
         private void PasserEnPhase_Lien_PositionDefinitive()
@@ -267,6 +286,7 @@ namespace MCD
 
         private void ItererPhase_Lien_PositionDefinitive()
         {
+            mcd.countLien += 1;
             PasserEnPhase_Lien_Attente();
         }
 

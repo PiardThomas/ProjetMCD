@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.IO;
+using System.Drawing;
 using static MCD.Form1;
 
 namespace MCD
@@ -7,7 +9,7 @@ namespace MCD
     {
         Graphics g;
 
-        public Lien(int X, int Y, int Id, int SizeX, int SizeY, string Colors, string Code)
+        public Lien(int X, int Y, int Id, int SizeX, int SizeY, string Code, string Name)
         {
             x = X;
             y = Y;
@@ -16,16 +18,17 @@ namespace MCD
             sizeY = SizeY;
             pen = new Pen(Color.Black, 3);
             code = Code;
+            name = Name;
         }
 
         //affichage --------------------------------------------------------
 
-        public void drawAssociation(Lien LienCurrent)
+        public void drawLien(Object lienCurrent)
         {
             g = pictureBox.CreateGraphics();
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            if (this != LienCurrent)
+            if (this != lienCurrent)
             {
                 g.DrawLine(pen, x, y, sizeX, sizeY);
             }
@@ -33,6 +36,23 @@ namespace MCD
             {
                 g.DrawLine(pen, x, y, sizeX, sizeY);
             }
+        }
+        public bool lienNotExist(string filename)
+        {
+            string line;
+            StreamReader sr = new StreamReader(@filename);
+            line = sr.ReadLine();
+            while (line != null)
+            {
+                String[] objet = line.Split(' ');
+                if (objet[1] == code)
+                {
+                    return false;
+                }
+                line = sr.ReadLine();
+            }
+            sr.Close();
+            return true;
         }
 
         // Record ----------------------------------------------------

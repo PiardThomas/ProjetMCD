@@ -11,14 +11,17 @@ namespace MCD
 
         public int countEntite = 0;
         public int countAssociation = 0;
+        public int countLien = 0;
 
         public string objetCurrent = null;
 
         private Entite entiteCurrent;
         private Association associationCurrent;
+        private Lien lienCurrent;
 
         private Entite entitePrevious;
         private Association associationPrevious;
+        private Lien lienPrevious;
 
         Entite entite;
         Association association;
@@ -26,12 +29,14 @@ namespace MCD
 
         Entite[] tabEntite = new Entite[1000];
         Association[] tabAssociation = new Association[1000];
+        Lien[] tabLien = new Lien[1000];
 
         public MCD()
         {
             countEntite = 0;
             countAssociation = 0;
-        }
+            countLien = 0;
+    }
 
         //objet --------------------------------------------------------------------------------
 
@@ -48,7 +53,13 @@ namespace MCD
 
             tabAssociation[countAssociation] = association;
         }
-        
+        public void newLien(int X, int Y, int SizeX, int SizeY, string Code, string Name)
+        {
+            lien = new Lien (X, Y, countLien, SizeX, SizeY, Code, Name);
+
+            tabLien[countLien] = lien;
+        }
+
         public void delObjet()
         {
             if(objetCurrent == "Entite")
@@ -71,6 +82,16 @@ namespace MCD
                     }
                 }
             }
+            else if (objetCurrent == "Lien")
+            {
+                for (int i = 0; i < countLien; i++)
+                {
+                    if (tabLien[i] == lienCurrent) //association actuelle = association dans le tab 
+                    {
+                        tabLien[i] = null;
+                    }
+                }
+            }
             reloadPage();
         }
         
@@ -88,6 +109,13 @@ namespace MCD
             association.drawAssociation(associationCurrent);
             association.x = X;
             association.y = Y;
+        }
+        public void drawCurrentLien(int X, int Y)
+        {
+            
+            lien.drawLien(lienCurrent);
+            lien.sizeX = X;
+            lien.sizeY = Y;
         }
 
         public void reloadPage()
@@ -110,6 +138,13 @@ namespace MCD
                 if (tabAssociation[i] != null)
                 {
                     tabAssociation[i].drawAssociation(associationCurrent);
+                }
+            }
+            for (int i = 0; i < countLien; i++)
+            {
+                if (tabLien[i] != null)
+                {
+                    tabLien[i].drawLien(lienCurrent); // redessine l'entitié stocké à l'emplacement i de tabEntite
                 }
             }
         }
@@ -327,6 +362,10 @@ namespace MCD
         public Association GetAssociationCurrent()
         {
             return associationCurrent;
+        }
+        public Lien GetLienCurrent()
+        {
+            return lienCurrent;
         }
     }
 }
